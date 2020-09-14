@@ -3,7 +3,7 @@ In this project, I created a simple search engine for the website https://www.la
 
 ### Part 1: The Power Method
 
-First, to check that the implementation is working, I ran the small.csv.gz graph. This was the output:
+a.) First, to check that the implementation is working, I ran the small.csv.gz graph. This was the output:
 ```
 $ python3 pagerank.py --data=./small.csv.gz --verbose
 DEBUG:root:computing indices
@@ -34,7 +34,7 @@ INFO:root:rank=4 pagerank=1.0243e-01 url=3
 INFO:root:rank=5 pagerank=9.2101e-02 url=1
 ```
 
-The power method was used to implement pagerank to return urls that match the sorted query string. Using the search query, the program takes in a string as the parameter and returns all urls that match the query string sorted according to their pagerank.
+b.) The power method was used to implement pagerank to return urls that match the sorted query string. Using the search query, the program takes in a string as the parameter and returns all urls that match the query string sorted according to their pagerank.
 ```
 python3 pagerank.py --data=./lawfareblog.csv.gz --search_query='corona'
 INFO:root:rank=0 pagerank=3.5861e-03 url=www.lawfareblog.com/lawfare-podcast-united-nations-and-coronavirus-crisis
@@ -50,7 +50,7 @@ INFO:root:rank=9 pagerank=2.0339e-03 url=www.lawfareblog.com/cyberlaw-podcast-ho
 
 ```
 
-When there is no filter limitation on the query, many of the top pages outputted are not actual articles. To narrow, our search, we can add a filter ratio. The `--filter_ratio` argument removes all pages that have more links than the specified fraction. 
+c.) When there is no filter limitation on the query, many of the top pages outputted are not actual articles. To narrow, our search, we can add a filter ratio. The `--filter_ratio` argument removes all pages that have more links than the specified fraction. 
 ```
 $ python3 pagerank.py --data=./lawfareblog.csv.gz --filter_ratio=0.2
 INFO:root:rank=0 pagerank=3.4321e-01 url=www.lawfareblog.com/trump-asks-supreme-court-stay-congressional-subpeona-tax-returns
@@ -64,9 +64,64 @@ INFO:root:rank=7 pagerank=1.4989e-01 url=www.lawfareblog.com/todays-headlines-an
 INFO:root:rank=8 pagerank=1.4803e-01 url=www.lawfareblog.com/todays-headlines-and-commentary-1963
 INFO:root:rank=9 pagerank=1.4469e-01 url=www.lawfareblog.com/lawfare-podcast-bonus-edition-gordon-sondland-vs-committee-no-bull
 ```
+d.)Given that the runtime of pagerank depends heavily on the eigengap of the $\bar\bar P$ matrix, I ran the following commands.
+```
+$ python3 pagerank.py --data=./lawfareblog.csv.gz --verbose 
+DEBUG:root:computing indices
+DEBUG:root:computing values
+INFO:root:rank=0 pagerank=8.4156e+00 url=www.lawfareblog.com/litigation-documents-related-appointment-matthew-whitaker-acting-attorney-general
+INFO:root:rank=1 pagerank=8.4156e+00 url=www.lawfareblog.com/lawfare-job-board
+INFO:root:rank=2 pagerank=8.4156e+00 url=www.lawfareblog.com/documents-related-mueller-investigation
+INFO:root:rank=3 pagerank=8.4156e+00 url=www.lawfareblog.com/litigation-documents-resources-related-travel-ban
+INFO:root:rank=4 pagerank=8.4156e+00 url=www.lawfareblog.com/subscribe-lawfare
+INFO:root:rank=5 pagerank=8.4156e+00 url=www.lawfareblog.com/masthead
+INFO:root:rank=6 pagerank=8.4156e+00 url=www.lawfareblog.com/topics
+INFO:root:rank=7 pagerank=8.4156e+00 url=www.lawfareblog.com/our-comments-policy
+INFO:root:rank=8 pagerank=8.4156e+00 url=www.lawfareblog.com/upcoming-events
+INFO:root:rank=9 pagerank=8.4156e+00 url=www.lawfareblog.com/about-lawfare-brief-history-term-and-site
+
+$ python3 pagerank.py --data=./lawfareblog.csv.gz --verbose --alpha=0.99999
+DEBUG:root:computing indices
+DEBUG:root:computing values
+INFO:root:rank=0 pagerank=1.0624e+01 url=www.lawfareblog.com/snowden-revelations
+INFO:root:rank=1 pagerank=1.0624e+01 url=www.lawfareblog.com/lawfare-job-board
+INFO:root:rank=2 pagerank=1.0624e+01 url=www.lawfareblog.com/masthead
+INFO:root:rank=3 pagerank=1.0624e+01 url=www.lawfareblog.com/litigation-documents-resources-related-travel-ban
+INFO:root:rank=4 pagerank=1.0624e+01 url=www.lawfareblog.com/subscribe-lawfare
+INFO:root:rank=5 pagerank=1.0624e+01 url=www.lawfareblog.com/litigation-documents-related-appointment-matthew-whitaker-acting-attorney-general
+INFO:root:rank=6 pagerank=1.0624e+01 url=www.lawfareblog.com/documents-related-mueller-investigation
+INFO:root:rank=7 pagerank=1.0624e+01 url=www.lawfareblog.com/our-comments-policy
+INFO:root:rank=8 pagerank=1.0624e+01 url=www.lawfareblog.com/upcoming-events
+INFO:root:rank=9 pagerank=1.0624e+01 url=www.lawfareblog.com/topics
+
+$ python3 pagerank_solution.py --data=./lawfareblog.csv.gz --verbose --filter_ratio=0.2
+INFO:root:rank=0 pagerank=4.4606e-01 url=www.lawfareblog.com/trump-asks-supreme-court-stay-congressional-subpeona-tax-returns
+INFO:root:rank=1 pagerank=3.9231e-01 url=www.lawfareblog.com/livestream-nov-21-impeachment-hearings-0
+INFO:root:rank=2 pagerank=2.7140e-01 url=www.lawfareblog.com/opening-statement-david-holmes
+INFO:root:rank=3 pagerank=1.6279e-01 url=www.lawfareblog.com/lawfare-podcast-ben-nimmo-whack-mole-game-disinformation
+INFO:root:rank=4 pagerank=1.6012e-01 url=www.lawfareblog.com/todays-headlines-and-commentary-1963
+INFO:root:rank=5 pagerank=1.5099e-01 url=www.lawfareblog.com/todays-headlines-and-commentary-1964
+INFO:root:rank=6 pagerank=1.5011e-01 url=www.lawfareblog.com/lawfare-podcast-week-was-impeachment
+INFO:root:rank=7 pagerank=1.4637e-01 url=www.lawfareblog.com/todays-headlines-and-commentary-1962
+INFO:root:rank=8 pagerank=1.4164e-01 url=www.lawfareblog.com/cyberlaw-podcast-mistrusting-google
+INFO:root:rank=9 pagerank=1.4010e-01 url=www.lawfareblog.com/lawfare-podcast-bonus-edition-gordon-sondland-vs-committee-no-bull
+
+$ python3 pagerank_solution.py --data=./lawfareblog.csv.gz --verbose --filter_ratio=0.2 --alpha=0.99999
+INFO:root:rank=0 pagerank=7.0149e-01 url=www.lawfareblog.com/covid-19-speech-and-surveillance-response
+INFO:root:rank=1 pagerank=7.0149e-01 url=www.lawfareblog.com/lawfare-live-covid-19-speech-and-surveillance
+INFO:root:rank=2 pagerank=4.0952e-01 url=www.lawfareblog.com/cost-using-zero-days
+INFO:root:rank=3 pagerank=3.2355e-02 url=www.lawfareblog.com/lawfare-podcast-former-congressman-brian-baird-and-daniel-schuman-how-congress-can-continue-function
+INFO:root:rank=4 pagerank=2.5040e-02 url=www.lawfareblog.com/events
+INFO:root:rank=5 pagerank=1.9027e-02 url=www.lawfareblog.com/water-wars-increased-us-focus-indo-pacific
+INFO:root:rank=6 pagerank=1.9026e-02 url=www.lawfareblog.com/water-wars-drill-maybe-drill
+INFO:root:rank=7 pagerank=1.6023e-02 url=www.lawfareblog.com/water-wars-disjointed-operations-south-china-sea
+INFO:root:rank=8 pagerank=1.6010e-02 url=www.lawfareblog.com/water-wars-song-oil-and-fire
+INFO:root:rank=9 pagerank=1.6010e-02 url=www.lawfareblog.com/water-wars-sinking-feeling-philippine-china-relations
+
+```
 
 ### Part 2: The Personalization Vector
-Through the implementation of a personalization vector, there is an different method of filtering which phrases to focus on. This is done through the `--personalization_vector_query` option.
+a.)Through the implementation of a personalization vector, there is an different method of filtering which phrases to focus on. This is done through the `--personalization_vector_query` option.
 ```
 $ python3 pagerank.py --data=./lawfareblog.csv.gz --filter_ratio=0.2 --personalization_vector_query='corona'
 INFO:root:rank=0 pagerank=6.4218e-01 url=www.lawfareblog.com/covid-19-speech-and-surveillance-response
@@ -81,7 +136,7 @@ INFO:root:rank=8 pagerank=7.9770e-02 url=www.lawfareblog.com/lawfare-podcast-uni
 INFO:root:rank=9 pagerank=7.3488e-02 url=www.lawfareblog.com/house-oversight-committee-holds-day-two-hearing-government-coronavirus-response
 ```
 
-The `--personalization_vector_query` option can also help us find pages that are related to a subject, but do not actually mention it. This can be used to find related topics for more information.
+b.)The `--personalization_vector_query` option can also help us find pages that are related to a subject, but do not actually mention it. This can be used to find related topics for more information.
 ```
 $ python3 pagerank.py --data=./lawfareblog.csv.gz --filter_ratio=0.2 --personalization_vector_query='corona' --search_query='-corona'
 INFO:root:rank=0 pagerank=6.4218e-01 url=www.lawfareblog.com/covid-19-speech-and-surveillance-response
@@ -96,7 +151,7 @@ INFO:root:rank=8 pagerank=5.1245e-02 url=www.lawfareblog.com/us-moves-dismiss-ca
 INFO:root:rank=9 pagerank=5.1245e-02 url=www.lawfareblog.com/livestream-house-armed-services-holds-hearing-national-security-challenges-north-and-south-america
 ```
 
-To test out this pagerank option with a national cyber security issue, I found related pages to run the code with Snowden.
+c.)To test out this pagerank option with a national cyber security issue, I found related pages to run the code with Snowden.
 ```
 $ python3 pagerank.py --data=./lawfareblog.csv.gz --filter_ratio=0.2 --personalization_vector_query='snowden' --search_query='-snowden'
 INFO:root:rank=0 pagerank=4.0829e-01 url=www.lawfareblog.com/trump-asks-supreme-court-stay-congressional-subpeona-tax-returns
