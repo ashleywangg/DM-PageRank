@@ -155,7 +155,7 @@ class WebGraph():
                 xprev = x
 
                 alphax = alpha * xprev.t()
-                scale = xprev * a + (1-alpha)
+                scalar = xprev * a + (1-alpha)
                 #combine the equation
                 equate = scalar * v.t()
 
