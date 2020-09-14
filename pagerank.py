@@ -104,15 +104,13 @@ class WebGraph():
 
         else:
             v = torch.zeros(n)
-            import re
+            
+            #loop to go through each url
             for i in range(n):
-                #for loop to go through each url
-                url = self._index_to_url(index=i)
+                url = self._index_to_url(i)
                 if url_satisfies_query(url,query):
                     #if url satisfies query
                     v[i]=1
-                else:
-                    pass
         
         v_sum = torch.sum(v)
         assert(v_sum>0)
@@ -144,26 +142,28 @@ class WebGraph():
             #equation 5.1, compute "a" vector
 
             x = x0
-            y=torch.zeros(n)
+            a = torch.zeros(n)
             total = torch.sparse.sum(self.P,1)
 
             for i in range(n):
                 if total[i] == 0:
-                    y[i] = 1
+                    a[i] = 1
                 else: 
-                    y[i] = 0
+                    a[i] = 0
 
             for k in range(0, max_iterations):
-                x_prev = x
+                xprev = x
 
-                alphax = alpha * x_prev.t()
+                alphax = alpha * xprev.t()
+                scale = xprev * a + (1-alpha)
+                #combine the equation
+                equate = scalar * v.t()
 
                 tran = torch.sparse.mm(self.P.t(), alphax.t()).t()
 
-                part = (alphax * a + (1-alpha))*v.t()
+                x = (tran + equate).t()
 
-                x = (tran + part).t()
-                if torch.norm(x-x_prev) < epsilon:
+                if torch.norm(x-xprev) < epsilon:
                     break
 
             return x.squeeze()
